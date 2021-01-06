@@ -8,6 +8,7 @@ let counter = 1;                          // counter for adding Id to each user
 app.use(bodyParser.urlencoded({ extended: false }))   // in-order for using body-parser
 app.use(bodyParser.json())
 
+            // LOGIN //
 
 app.post('/user/login', (req, res) => {
     const { username, password } = req.body;
@@ -18,6 +19,8 @@ app.post('/user/login', (req, res) => {
         res.status(403).send('Login failed')
     }
 })
+
+   // CREATE USER //
 
 app.put('/user', (req, res) => {
     // const username= req.body.username;
@@ -41,9 +44,7 @@ app.put('/user', (req, res) => {
     res.sendStatus(201)
 })
 
-app.get('/user', (req, res) => {
-    res.send(users)
-})
+        // GET USER BY ID //
 
 app.get('/user/:id', (req, res) => {
     const userId = parseInt(req.params.id)
@@ -56,6 +57,8 @@ app.get('/user/:id', (req, res) => {
 
 });
 
+        // DELETE USER BY ID //
+
 app.delete('/user/:id', (req, res) => {
     const userId = parseInt(req.params.id)
     const requestedUser = users.find(user => user.id === userId)
@@ -67,10 +70,12 @@ app.delete('/user/:id', (req, res) => {
     res.sendStatus(204);  /// 204 Won’t Return Content
 });
 
+        // EDIT USER BY ID //
+
 app.post('/user/:id', (req, res) => {
     const userId = parseInt(req.params.id)
     const requestedUser = users.find(user => user.id === userId)
-    if (!requestedUser) {
+    if (!requestedUser) {   //Checking if exist
         res.status(404).send(`user not found`)
         return;
     }
@@ -104,6 +109,7 @@ app.post('/user/:id', (req, res) => {
 
 
 
+        //  CHANGE PASSWORD AND USERNAME FUNCTIONS // 
 
 function changePassword(user, password) {
     users[users.indexOf(user)].password = password
@@ -111,6 +117,10 @@ function changePassword(user, password) {
 function changeUsername(user, username) {
     users[users.indexOf(user)].username = username
 }
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
