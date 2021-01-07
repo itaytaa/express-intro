@@ -12,7 +12,7 @@ app.use(bodyParser.json())
 
 app.post('/user/login', (req, res) => {
     const { username, password } = req.body;
-    const requestedUser = users.find(user => (username === user.username && password === user.password))
+    const requestedUser = users.find(user => (username === user.username && password.toString() === user.password))
     if (requestedUser) {
         res.status(200).send('Login successfully')
     } else {
@@ -30,7 +30,7 @@ app.put('/user', (req, res) => {
         res.status(400).send('Incorrect body')
         return;
     }
-    if (username.length < 3 || password.toString().length < 6) {
+    if (username.length < 3 || password.length < 6) {
         res.status(400).send('Incorrect body')
         return;
     }
@@ -42,6 +42,13 @@ app.put('/user', (req, res) => {
     counter++;
     users.push(newUser)
     res.sendStatus(201)
+})
+  
+
+        // GET ALL USERS //
+
+app.get('/user', (req, res) => {
+    res.send(users)
 })
 
         // GET USER BY ID //
@@ -80,31 +87,24 @@ app.post('/user/:id', (req, res) => {
         return;
     }
     const { username, password } = req.body;
-    if (!password) {              // if ONLY username is what we want to update
+    if (username) {            
         if (!username.length >= 3) {    // if the value length isn't >= 3 
             res.sendStatus(400).send('Username must contain 3 letters or more ')
         } else {                 //if username length is correct :
             changeUsername(requestedUser, username)
-            res.status(200).send(`username was changed`)
+          
         }
     }
-    if (!username) {             // if ONLY password is what we want to update
+    if (password) {            
         if (!(password.toString().length >= 6)) {    // if the value length isn't >= 6
             res.status(400).send('password must contain 3 letters or more')
         } else {                 //if password length is correct :
             changePassword(requestedUser, password)
-            res.status(200).send(`password was changed`)
+       
         }
     }
-    if (username && password) {      //if we want to change both :
-        if (!(password.toString().length >= 6) || !(username.length >= 3)) {  //if one of them is incorrect:
-            res.status(400).send('Incorrect body')
-        } else {                       //if both are correct :
-            changePassword(requestedUser, password)
-            changeUsername(requestedUser, username)
-            res.status(200).send(`user was changed`)
-        }
-    }
+    res.status(200).send(`username was changed`)
+
 })
 
 
